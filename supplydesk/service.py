@@ -6,8 +6,7 @@ CUSTOMER_TYPES = ("regular", "student")
 FULFILLMENT_OPTIONS = ("pickup", "delivery")
 MIN_QUANTITY = 1
 MAX_QUANTITY = 99
-# Spec: students get 10% off when the subtotal is at least $50.00.
-# NOTE: the comparison below still uses ">" (see defect D1); refactoring keeps it unchanged.
+# Students get 10% off when the subtotal is at least $50.00.
 STUDENT_DISCOUNT_THRESHOLD_CENTS = 5000
 STUDENT_DISCOUNT_PERCENT = 10
 DELIVERY_FEE_CENTS = 600
@@ -41,8 +40,12 @@ def _find_product(catalog, product_id):
     return None
 
 
-def _price_line(catalog, item):
-    """Validate one requested item and return its priced line."""
+def _price_line(catalog, item, already_requested=0):
+    """Validate one requested item and return its priced line.
+
+    already_requested is the quantity of the same product on earlier lines,
+    so stock is checked against the combined request.
+    """
     if not isinstance(item, dict):
         raise ValueError("Each item must contain a product_id and quantity.")
     product = _find_product(catalog, item.get("product_id"))
@@ -51,7 +54,7 @@ def _price_line(catalog, item):
     quantity = item.get("quantity")
     if type(quantity) is not int or quantity < MIN_QUANTITY or quantity > MAX_QUANTITY:
         raise ValueError(f"Quantity must be an integer from {MIN_QUANTITY} to {MAX_QUANTITY}.")
-    if quantity > product["stock"]:
+    if already_requested + quantity > product["stock"]:
         raise ValueError("Not enough stock for " + product["product_id"] + ".")
     return {
         "product_id": product["product_id"],
@@ -64,7 +67,7 @@ def _price_line(catalog, item):
 
 def _student_discount(customer_type, subtotal):
     """Discount in cents for this customer type and subtotal."""
-    if customer_type == "student" and subtotal > STUDENT_DISCOUNT_THRESHOLD_CENTS:
+    if customer_type == "student" and subtotal >= STUDENT_DISCOUNT_THRESHOLD_CENTS:
         return percent_rounded_half_up(subtotal, STUDENT_DISCOUNT_PERCENT)
     return 0
 
@@ -84,7 +87,13 @@ def price_request(catalog, customer_type, items, fulfillment="pickup"):
     Raises ValueError for an invalid request.
     """
     _validate_options(customer_type, fulfillment, items)
-    lines = [_price_line(catalog, item) for item in items]
+    lines = []
+    requested = {}
+    for item in items:
+        product_id = item.get("product_id") if isinstance(item, dict) else None
+        line = _price_line(catalog, item, requested.get(product_id, 0))
+        requested[line["product_id"]] = requested.get(line["product_id"], 0) + line["quantity"]
+        lines.append(line)
     subtotal = sum(line["line_total_cents"] for line in lines)
     discount = _student_discount(customer_type, subtotal)
     delivery = _delivery_charge(fulfillment, subtotal - discount)
@@ -144,6 +153,8 @@ class OrderService:
     def cancel_order(self, order_id):
         state = self.store.load()
         order = self._find_order(state, order_id)
+        if order["status"] == STATUS_CANCELLED:
+            return order  # already cancelled: no second stock restore
         _adjust_stock(state["catalog"], order["items"], +1)
         order["status"] = STATUS_CANCELLED
         self.store.save(state)
