@@ -3,7 +3,7 @@
 from supplydesk.storage import JsonStore
 
 CUSTOMER_TYPES = ("regular", "student")
-FULFILLMENT_OPTIONS = ("pickup", "delivery")
+FULFILLMENT_OPTIONS = ("pickup", "delivery", "express")
 MIN_QUANTITY = 1
 MAX_QUANTITY = 99
 # Students get 10% off when the subtotal is at least $50.00.
@@ -11,6 +11,8 @@ STUDENT_DISCOUNT_THRESHOLD_CENTS = 5000
 STUDENT_DISCOUNT_PERCENT = 10
 DELIVERY_FEE_CENTS = 600
 FREE_DELIVERY_THRESHOLD_CENTS = 10000
+# CR-01: express is a flat fee that is never waived.
+EXPRESS_FEE_CENTS = 1200
 ORDER_ID_PREFIX = "ORD-"
 ORDER_NUMBER_WIDTH = 4
 STATUS_PLACED = "placed"
@@ -27,7 +29,7 @@ def _validate_options(customer_type, fulfillment, items):
     if customer_type not in CUSTOMER_TYPES:
         raise ValueError("Customer type must be regular or student.")
     if fulfillment not in FULFILLMENT_OPTIONS:
-        raise ValueError("Fulfillment must be pickup or delivery.")
+        raise ValueError("Fulfillment must be one of: " + ", ".join(FULFILLMENT_OPTIONS) + ".")
     if not isinstance(items, list) or not items:
         raise ValueError("An order must contain at least one item.")
 
@@ -73,7 +75,13 @@ def _student_discount(customer_type, subtotal):
 
 
 def _delivery_charge(fulfillment, discounted_subtotal):
-    """Delivery charge in cents; free for pickup or large orders."""
+    """Delivery charge in cents.
+
+    Pickup is free. Standard delivery is free at or above the threshold.
+    Express always costs the flat express fee.
+    """
+    if fulfillment == "express":
+        return EXPRESS_FEE_CENTS
     if fulfillment == "delivery" and discounted_subtotal < FREE_DELIVERY_THRESHOLD_CENTS:
         return DELIVERY_FEE_CENTS
     return 0
