@@ -1,0 +1,57 @@
+# 4_final @ a58a326 Docs: README section, AI-use record, evidence script
+# Tue 10 Nov 2026 23:03:33 EST
+test_cli_default_is_still_pickup (test_cr01_express.ExpressInterfaceTests.test_cli_default_is_still_pickup) ... ok
+test_cli_example_from_cr01 (test_cr01_express.ExpressInterfaceTests.test_cli_example_from_cr01) ... ok
+test_cli_help_mentions_express (test_cr01_express.ExpressInterfaceTests.test_cli_help_mentions_express) ... ok
+test_cli_rejects_unknown_fulfillment (test_cr01_express.ExpressInterfaceTests.test_cli_rejects_unknown_fulfillment) ... ok
+test_menu_places_express_order (test_cr01_express.ExpressInterfaceTests.test_menu_places_express_order) ... ok
+test_menu_prompt_offers_express_and_keeps_pickup_default (test_cr01_express.ExpressInterfaceTests.test_menu_prompt_offers_express_and_keeps_pickup_default) ... ok
+test_invalid_express_request_changes_nothing (test_cr01_express.ExpressOrderLifecycleTests.test_invalid_express_request_changes_nothing) ... ok
+test_numbering_continues_across_fulfillment_types (test_cr01_express.ExpressOrderLifecycleTests.test_numbering_continues_across_fulfillment_types) ... ok
+test_quote_matches_placed_order (test_cr01_express.ExpressOrderLifecycleTests.test_quote_matches_placed_order) ... ok
+test_reopen_get_and_cancel_keep_express_details (test_cr01_express.ExpressOrderLifecycleTests.test_reopen_get_and_cancel_keep_express_details) ... ok
+test_discount_is_on_merchandise_only (test_cr01_express.ExpressPricingTests.test_discount_is_on_merchandise_only) ... ok
+test_example_regular_two_notebooks (test_cr01_express.ExpressPricingTests.test_example_regular_two_notebooks) ... ok
+test_example_student_two_hoodies (test_cr01_express.ExpressPricingTests.test_example_student_two_hoodies) ... ok
+test_example_three_hoodies_standard_vs_express (test_cr01_express.ExpressPricingTests.test_example_three_hoodies_standard_vs_express) ... ok
+test_express_fee_not_waived_at_free_delivery_threshold (test_cr01_express.ExpressPricingTests.test_express_fee_not_waived_at_free_delivery_threshold) ... ok
+test_other_fulfillment_values_still_invalid (test_cr01_express.ExpressPricingTests.test_other_fulfillment_values_still_invalid) ... ok
+test_pickup_and_standard_unchanged (test_cr01_express.ExpressPricingTests.test_pickup_and_standard_unchanged) ... ok
+test_delivery_fee_uses_discounted_subtotal (test_pricing.PriceRequestTests.test_delivery_fee_uses_discounted_subtotal) ... ok
+test_does_not_mutate_catalog (test_pricing.PriceRequestTests.test_does_not_mutate_catalog) ... ok
+test_line_snapshot_fields (test_pricing.PriceRequestTests.test_line_snapshot_fields) ... ok
+test_non_dict_item_rejected (test_pricing.PriceRequestTests.test_non_dict_item_rejected) ... ok
+test_spec_example_regular_delivery_three_hoodies (test_pricing.PriceRequestTests.test_spec_example_regular_delivery_three_hoodies) ... ok
+test_below_half_cent_rounds_down (test_pricing.RoundingTests.test_below_half_cent_rounds_down) ... ok
+test_half_cent_rounds_up (test_pricing.RoundingTests.test_half_cent_rounds_up) ... ok
+test_result_is_integer (test_pricing.RoundingTests.test_result_is_integer) ... ok
+test_delivery_threshold (test_safety_net.Boundary.test_delivery_threshold) ... ok
+test_discount_just_above_threshold (test_safety_net.Boundary.test_discount_just_above_threshold) ... ok
+test_exact_stock_vs_one_more (test_safety_net.Boundary.test_exact_stock_vs_one_more) ... ok
+test_quantity_limits (test_safety_net.Boundary.test_quantity_limits) ... ok
+test_invalid_requests_raise (test_safety_net.Invalid.test_invalid_requests_raise) ... ok
+test_rejected_order_changes_nothing (test_safety_net.Invalid.test_rejected_order_changes_nothing) ... ok
+test_unknown_order_id (test_safety_net.Invalid.test_unknown_order_id) ... ok
+test_place_three_notebooks (test_safety_net.Normal.test_place_three_notebooks) ... ok
+test_student_delivery_two_hoodies (test_safety_net.Normal.test_student_delivery_two_hoodies) ... ok
+test_cancel_restores_stock_and_keeps_history (test_safety_net.Preserve.test_cancel_restores_stock_and_keeps_history) ... ok
+test_order_ids_increase (test_safety_net.Preserve.test_order_ids_increase) ... ok
+test_quote_changes_nothing_and_creates_no_file (test_safety_net.Preserve.test_quote_changes_nothing_and_creates_no_file) ... ok
+test_quote_matches_placed_order (test_safety_net.Preserve.test_quote_matches_placed_order) ... ok
+test_reopen_preserves_state (test_safety_net.Preserve.test_reopen_preserves_state) ... ok
+test_discount_at_exactly_5000 (test_safety_net.SuspectedDefects.test_discount_at_exactly_5000) ... ok
+test_double_cancel_restores_once (test_safety_net.SuspectedDefects.test_double_cancel_restores_once) ... ok
+test_duplicate_lines_combined_stock (test_safety_net.SuspectedDefects.test_duplicate_lines_combined_stock) ... ok
+test_cancel_order_restores_stock (test_smoke.OrderSmokeTests.test_cancel_order_restores_stock) ... ok
+test_order_can_be_reopened (test_smoke.OrderSmokeTests.test_order_can_be_reopened) ... ok
+test_regular_pickup_quote (test_smoke.OrderSmokeTests.test_regular_pickup_quote) ... ok
+test_student_delivery_quote (test_smoke.OrderSmokeTests.test_student_delivery_quote) ... ok
+test_cancel_with_missing_product_raises_and_saves_nothing (test_task6_decisions.DamagedSaveFileTests.test_cancel_with_missing_product_raises_and_saves_nothing) ... ok
+test_default_constructor_still_uses_json_file (test_task6_decisions.InjectedStoreTests.test_default_constructor_still_uses_json_file) ... ok
+test_quote_never_saves (test_task6_decisions.InjectedStoreTests.test_quote_never_saves) ... ok
+test_service_runs_without_any_file (test_task6_decisions.InjectedStoreTests.test_service_runs_without_any_file) ... ok
+
+----------------------------------------------------------------------
+Ran 50 tests in 0.016s
+
+OK

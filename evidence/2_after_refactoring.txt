@@ -1,0 +1,93 @@
+# 2_after_refactoring @ 264dee3 Test: add I/O-free pricing tests for extracted price_request()
+# Tue 10 Nov 2026 23:03:33 EST
+test_delivery_fee_uses_discounted_subtotal (test_pricing.PriceRequestTests.test_delivery_fee_uses_discounted_subtotal) ... ok
+test_does_not_mutate_catalog (test_pricing.PriceRequestTests.test_does_not_mutate_catalog) ... ok
+test_line_snapshot_fields (test_pricing.PriceRequestTests.test_line_snapshot_fields) ... ok
+test_non_dict_item_rejected (test_pricing.PriceRequestTests.test_non_dict_item_rejected) ... ok
+test_spec_example_regular_delivery_three_hoodies (test_pricing.PriceRequestTests.test_spec_example_regular_delivery_three_hoodies) ... ok
+test_below_half_cent_rounds_down (test_pricing.RoundingTests.test_below_half_cent_rounds_down) ... ok
+test_half_cent_rounds_up (test_pricing.RoundingTests.test_half_cent_rounds_up) ... ok
+test_result_is_integer (test_pricing.RoundingTests.test_result_is_integer) ... ok
+test_delivery_threshold (test_safety_net.Boundary.test_delivery_threshold) ... ok
+test_discount_just_above_threshold (test_safety_net.Boundary.test_discount_just_above_threshold) ... ok
+test_exact_stock_vs_one_more (test_safety_net.Boundary.test_exact_stock_vs_one_more) ... ok
+test_quantity_limits (test_safety_net.Boundary.test_quantity_limits) ... ok
+test_invalid_requests_raise (test_safety_net.Invalid.test_invalid_requests_raise) ... ok
+test_rejected_order_changes_nothing (test_safety_net.Invalid.test_rejected_order_changes_nothing) ... ok
+test_unknown_order_id (test_safety_net.Invalid.test_unknown_order_id) ... ok
+test_place_three_notebooks (test_safety_net.Normal.test_place_three_notebooks) ... ok
+test_student_delivery_two_hoodies (test_safety_net.Normal.test_student_delivery_two_hoodies) ... ok
+test_cancel_restores_stock_and_keeps_history (test_safety_net.Preserve.test_cancel_restores_stock_and_keeps_history) ... ok
+test_order_ids_increase (test_safety_net.Preserve.test_order_ids_increase) ... ok
+test_quote_changes_nothing_and_creates_no_file (test_safety_net.Preserve.test_quote_changes_nothing_and_creates_no_file) ... ok
+test_quote_matches_placed_order (test_safety_net.Preserve.test_quote_matches_placed_order) ... ok
+test_reopen_preserves_state (test_safety_net.Preserve.test_reopen_preserves_state) ... ok
+test_discount_at_exactly_5000 (test_safety_net.SuspectedDefects.test_discount_at_exactly_5000) ... FAIL
+test_double_cancel_restores_once (test_safety_net.SuspectedDefects.test_double_cancel_restores_once) ... FAIL
+test_duplicate_lines_combined_stock (test_safety_net.SuspectedDefects.test_duplicate_lines_combined_stock) ... FAIL
+test_cancel_order_restores_stock (test_smoke.OrderSmokeTests.test_cancel_order_restores_stock) ... ok
+test_order_can_be_reopened (test_smoke.OrderSmokeTests.test_order_can_be_reopened) ... ok
+test_regular_pickup_quote (test_smoke.OrderSmokeTests.test_regular_pickup_quote) ... ok
+test_student_delivery_quote (test_smoke.OrderSmokeTests.test_student_delivery_quote) ... ok
+
+======================================================================
+FAIL: test_discount_at_exactly_5000 (test_safety_net.SuspectedDefects.test_discount_at_exactly_5000)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kamakshi/Documents/COMP3415-A2-Campus-Supply-Desk-1/tests/test_safety_net.py", line 123, in test_discount_at_exactly_5000
+    self.assertEqual(q["discount_cents"], 500)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 500
+
+======================================================================
+FAIL: test_double_cancel_restores_once (test_safety_net.SuspectedDefects.test_double_cancel_restores_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kamakshi/Documents/COMP3415-A2-Campus-Supply-Desk-1/tests/test_safety_net.py", line 130, in test_double_cancel_restores_once
+    self.assertEqual(self.service.catalog(), before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'pr[159 chars]k': 12}, {'product_id': 'hoodie', 'name': 'Cam[212 chars]: 4}] != [{'pr[159 chars]k': 10}, {'product_id': 'hoodie', 'name': 'Cam[212 chars]: 4}]
+
+First differing element 1:
+{'pro[16 chars]ack', 'name': 'Pen pack', 'unit_price_cents': 750, 'stock': 12}
+{'pro[16 chars]ack', 'name': 'Pen pack', 'unit_price_cents': 750, 'stock': 10}
+
+  [{'name': 'Notebook',
+    'product_id': 'notebook',
+    'stock': 20,
+    'unit_price_cents': 500},
+   {'name': 'Pen pack',
+    'product_id': 'pen-pack',
+-   'stock': 12,
+?             ^
+
++   'stock': 10,
+?             ^
+
+    'unit_price_cents': 750},
+   {'name': 'Campus hoodie',
+    'product_id': 'hoodie',
+    'stock': 5,
+    'unit_price_cents': 4000},
+   {'name': 'Campus mug',
+    'product_id': 'mug',
+    'stock': 8,
+    'unit_price_cents': 1500},
+   {'name': 'Canvas bag',
+    'product_id': 'bag',
+    'stock': 4,
+    'unit_price_cents': 2500}]
+
+======================================================================
+FAIL: test_duplicate_lines_combined_stock (test_safety_net.SuspectedDefects.test_duplicate_lines_combined_stock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kamakshi/Documents/COMP3415-A2-Campus-Supply-Desk-1/tests/test_safety_net.py", line 135, in test_duplicate_lines_combined_stock
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.008s
+
+FAILED (failures=3)
