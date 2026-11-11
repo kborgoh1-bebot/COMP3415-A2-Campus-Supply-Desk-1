@@ -118,18 +118,21 @@ def price_request(catalog, customer_type, items, fulfillment="pickup"):
 
 def _adjust_stock(catalog, lines, direction):
     """Add (direction=+1) or remove (direction=-1) each line's units from stock."""
-    for line in lines:
-        product = _find_product(catalog, line["product_id"])
-        if product is not None:  # original loops skipped unknown IDs; preserved
-            product["stock"] += direction * line["quantity"]
+    products = [_find_product(catalog, line["product_id"]) for line in lines]
+    for line, product in zip(lines, products):
+        if product is None:  # damaged save file: fail before changing anything
+            raise ValueError("Saved order references unknown product: " + line["product_id"])
+    for line, product in zip(lines, products):
+        product["stock"] += direction * line["quantity"]
 
 
 def _format_order_id(number):
     return ORDER_ID_PREFIX + str(number).zfill(ORDER_NUMBER_WIDTH)
 
 class OrderService:
-    def __init__(self, state_path=".supplydesk/state.json"):
-        self.store = JsonStore(state_path)
+    def __init__(self, state_path=".supplydesk/state.json", store=None):
+        """Use the JSON save file at state_path, or an injected store with load()/save()."""
+        self.store = store if store is not None else JsonStore(state_path)
 
     def catalog(self):
         return self.store.load()["catalog"]
